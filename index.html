@@ -133,6 +133,53 @@
       document.getElementById(step).classList.add('active');
     }
   </script>
+  <audio id="bg-music" autoplay loop muted>
+  <source src="song.mp3" type="audio/mp3" />
+  Your browser support the audio element.
+</audio>
+
+<script>
+  // Step control references
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2'); // wishes and gallery side by side
+  const step3 = document.getElementById('step3'); // photo memories gallery
+  const step4 = document.getElementById('step4'); // birthday cake
+  const btnEnterWishes = document.getElementById('enterToWishesBtn');
+  const surpriseBtn = document.getElementById('surpriseBtn');
+  const btnEnterCake = document.getElementById('enterToCakeBtn');
+  const bgMusic = document.getElementById('bg-music');
+
+  // Volume fade in helper for music
+  function fadeTo(volume, duration) {
+    return new Promise(resolve => {
+      let volStep = (volume - bgMusic.volume) / (duration / 50);
+      let interval = setInterval(() => {
+        let newVolume = bgMusic.volume + volStep;
+        if ((volStep > 0 && newVolume >= volume) || (volStep < 0 && newVolume <= volume)) {
+          bgMusic.volume = volume;
+          clearInterval(interval);
+          resolve();
+        } else {
+          bgMusic.volume = newVolume;
+        }
+      }, 50);
+    });
+  }
+
+  // Initial music muted with volume 0
+  bgMusic.volume = 0;
+  // Enable unmute on user interaction for autoplay
+  function enableMusicSound() {
+    if (bgMusic.muted) {
+      bgMusic.muted = false;
+    }
+    fadeTo(0.20, 800);
+    window.removeEventListener('click', enableMusicSound);
+    window.removeEventListener('touchstart', enableMusicSound);
+  }
+  window.addEventListener('click', enableMusicSound);
+  window.addEventListener('touchstart', enableMusicSound);
 </body>
 </html>
+
 
